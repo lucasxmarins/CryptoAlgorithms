@@ -93,13 +93,9 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
         if getindex(cipher_table, pair[0])[0] == getindex(cipher_table, pair[1])[0]:
             # For first letter of pair
             x1, y1 = getindex(cipher_table, pair[0])
-            # encrypt mode
+            
             if y1 == (len(cipher_table) - 1) and mode == 'e':
                 crypt_text.append(cipher_table[x1][0])
-            # elif mode == 'c':
-            #    crypt_text.append(cipher_table[x1][y1 + 1])
-
-            # Decryption mode
             elif y1 == 0 and mode == 'd':
                 crypt_text.append(cipher_table[x1][-1])
             else:
@@ -107,9 +103,9 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
 
             # For second letter of pair
             x2, y2 = getindex(cipher_table, pair[1])
+            
             if y2 == (len(cipher_table) - 1) and mode == 'e':
                 crypt_text.append(cipher_table[x2][0])
-
             elif y2 == 0 and mode == 'd':
                 crypt_text.append(cipher_table[x2][-1])
             else:
@@ -122,7 +118,6 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
 
             if x1 == (len(cipher_table) - 1) and mode == 'e':
                 crypt_text.append(cipher_table[0][y1])
-
             elif x1 == 0 and mode == 'd':
                 crypt_text.append(cipher_table[-1][y1])
             else:
@@ -130,6 +125,7 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
 
             # For second letter of pair
             x2, y2 = getindex(cipher_table, pair[1])
+            
             if x2 == (len(cipher_table) - 1) and mode == 'e':
                 crypt_text.append(cipher_table[0][y2])
             elif x2 == 0 and mode == 'd':
@@ -141,13 +137,14 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
         else:
             x1, y1 = getindex(cipher_table, pair[0])
             x2, y2 = getindex(cipher_table, pair[1])
+            
             # For first letter of pair
             crypt_text.append(cipher_table[x1][y2])
 
             # For second letter of pair
             crypt_text.append(cipher_table[x2][y1])
 
-    # Transform crypt_text into a string for output
+    # Transform crypt_text into a string in Playfair's style for output
     new_text = ''
     for i in range(len(crypt_text)):
         new_text += crypt_text[i]
