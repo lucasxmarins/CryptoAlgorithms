@@ -181,7 +181,7 @@ def main():
                 break
             try:
                 if mode != 't':
-                    text = str(input('Text to be encrypted: '))
+                    text = str(input('Text to be encrypted/decrypted: '))
                 key = str(input('Key to encrypt: '))
                 break
             except ValueError:
