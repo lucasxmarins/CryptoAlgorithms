@@ -67,11 +67,6 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
     for i, j in enumerate(text):
         if text[i] == text[i - 1] and i % 2 != 0:
             text.insert(i, 'X')
-    # Try uncomment section bellow. You'll see range function only provides us a static length. With append()
-    # the size of our list is increasing, so range cannot helps us :(
-    # for i in range(len(text)):
-    #     if text[i] == text[i - 1] and i % 2 != 0:
-    #         text.insert(i, 'X')
 
     if len(text) % 2 != 0:
         text.append('X')
@@ -79,7 +74,6 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
     text = split(text, (len(text) // 2))
     cipher_table = pf_tablemaker(key_zero)
 
-    # print(text) # Used to check some errors that may appear at rearrange process
 
     # Encrypt/Decrypt  the text
     if mode == 'd':
