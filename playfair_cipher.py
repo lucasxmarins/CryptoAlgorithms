@@ -3,12 +3,27 @@
 # GitHub Profile: https://github.com/lucasxmarins
 # Data: 28/05/2020
 #
-# Description: This program is a encrypter/decrypter for Playfair cipher.
-# The technique encrypts pairs of letters, instead of single letters as in the simple substitution cipher and rather
-# more complex Vigenère cipher systems then in use. The Playfair is thus significantly harder to break since the
-# frequency analysis used for simple substitution ciphers does not work with it. The frequency analysis of bigrams is
-# possible, but considerably more difficult. With 600 possible bigrams rather than the 26 possible monograms  (single
-# symbols, usually letters in this context), a considerably larger cipher text is required in order to be useful.
+# Description: The Playfair cipher uses a 5 by 5 table containing a key word or phrase.
+# To encrypt a message, one would break the message into digrams (groups of 2 letters) such that, for example:
+# "HelloWorld" becomes "HE LL OW OR LD". These digrams will be substituted using the key table. Since encryption
+# requires pairs of letters, messages with an odd number of characters usually append an uncommon letter, such as "X",
+# to complete the final digram. The two letters of the digram are considered opposite corners of a rectangle in the key
+# table.
+# To perform the substitution, apply the following 4 rules, in order, to each pair of letters in the plaintext:
+#
+# 1 )If both letters are the same (or only one letter is left), add an "X" after the first letter. Encrypt the new pair
+# and continue. Some variants of Playfair use "Q" instead of "X", but any letter, itself uncommon as a repeated pair,
+# will do.
+# 2) If the letters appear on the same row of your table, replace them with the letters to their immediate right
+# respectively (wrapping around to the left side of the row if a letter in the original pair was on the right side of
+# the row).
+# 3) If the letters appear on the same column of your table, replace them with the letters immediately below
+# respectively (wrapping around to the top side of the column if a letter in the original pair was on the bottom side
+# of the column).
+# 4)If the letters are not on the same row or column, replace them with the letters on the same row respectively but at
+# the other pair of corners of the rectangle defined by the original pair. The order is important – the first letter of
+# the encrypted pair is the one that lies on the same row as the first letter of the plaintext pair.
+# 5) To decrypt, use the inverse (opposite) of the last 3 rules, and the first as-is (dropping any extra "X"s).
 #
 # More information about the cipher: https://en.wikipedia.org/wiki/Playfair_cipher
 # **********************************************************************************************************************
@@ -67,6 +82,11 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
     for i, j in enumerate(text):
         if text[i] == text[i - 1] and i % 2 != 0:
             text.insert(i, 'X')
+    # Try uncomment section bellow. You'll see range function only provides us a static length. With append()
+    # the size of our list is increasing, so range cannot helps us :(
+    # for i in range(len(text)):
+    #     if text[i] == text[i - 1] and i % 2 != 0:
+    #         text.insert(i, 'X')
 
     if len(text) % 2 != 0:
         text.append('X')
@@ -74,6 +94,7 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
     text = split(text, (len(text) // 2))
     cipher_table = pf_tablemaker(key_zero)
 
+    # print(text) # Used to check some errors that may appear at rearrange process
 
     # Encrypt/Decrypt  the text
     if mode == 'd':
@@ -87,9 +108,11 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
         if getindex(cipher_table, pair[0])[0] == getindex(cipher_table, pair[1])[0]:
             # For first letter of pair
             x1, y1 = getindex(cipher_table, pair[0])
-            
+            # encrypt mode
             if y1 == (len(cipher_table) - 1) and mode == 'e':
                 crypt_text.append(cipher_table[x1][0])
+
+            # Decryption mode
             elif y1 == 0 and mode == 'd':
                 crypt_text.append(cipher_table[x1][-1])
             else:
@@ -97,9 +120,9 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
 
             # For second letter of pair
             x2, y2 = getindex(cipher_table, pair[1])
-            
             if y2 == (len(cipher_table) - 1) and mode == 'e':
                 crypt_text.append(cipher_table[x2][0])
+
             elif y2 == 0 and mode == 'd':
                 crypt_text.append(cipher_table[x2][-1])
             else:
@@ -112,6 +135,7 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
 
             if x1 == (len(cipher_table) - 1) and mode == 'e':
                 crypt_text.append(cipher_table[0][y1])
+
             elif x1 == 0 and mode == 'd':
                 crypt_text.append(cipher_table[-1][y1])
             else:
@@ -119,7 +143,6 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
 
             # For second letter of pair
             x2, y2 = getindex(cipher_table, pair[1])
-            
             if x2 == (len(cipher_table) - 1) and mode == 'e':
                 crypt_text.append(cipher_table[0][y2])
             elif x2 == 0 and mode == 'd':
@@ -131,14 +154,13 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
         else:
             x1, y1 = getindex(cipher_table, pair[0])
             x2, y2 = getindex(cipher_table, pair[1])
-            
             # For first letter of pair
             crypt_text.append(cipher_table[x1][y2])
 
             # For second letter of pair
             crypt_text.append(cipher_table[x2][y1])
 
-    # Transform crypt_text into a string in Playfair's style for output
+    # Transform crypt_text into a string for output
     new_text = ''
     for i in range(len(crypt_text)):
         new_text += crypt_text[i]
@@ -150,33 +172,47 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
 
 def main():
     """
-    Main function that receives user input and passes it to play_cipher( )
+    Main function that receives user input and passes it to playfair_cipher( )
     """
 
     print('PLAYFAIR CIPHER PROGRAM')
     while True:
+
         while True:
-            key = ''
-            text = ''
+            try:
+                options = ('e', 'd', 't', 'out')
+                print('\nWhich mode would like to use?')
+                mode = str(input('Encrypt -> e | Decrypt -> d | t -> show table for key | out -> exit program >> '))
+                if mode not in options:
+                    raise ValueError
+                break
+            except ValueError:
+                print('Valid commands: Encrypt -> e | Decrypt -> d | t -> Show Crypt Table')
+
+        if mode == 'out':
+            break
+
+        # Initializing variable cause it's value assignment is inside if statement
+        text = None
+
+        if mode != 't':
             while True:
                 try:
-                    options = ['e', 'd', 't', 'out']
-                    print('Which mode would like to use?')
-                    mode = str(input('Encrypt -> e | Decrypt -> d | t -> show table for key | out -> exit program >> '))
-                    if mode not in options:
+                    text = str(input('Text to be encrypted/decrypted: ')).lower()
+                    if all(char.isalpha() or char.isspace() for char in text) is False:
                         raise ValueError
                     break
                 except ValueError:
-                    print('Valid commands: Encrypt -> e | Decrypt -> d | t -> Show Crypt Table')
-            if mode == 'out':
-                break
+                    print('Only alphabetic characters accepted for encryption and key setting!!! ')
+
+        while True:
             try:
-                if mode != 't':
-                    text = str(input('Text to be encrypted/decrypted: '))
                 key = str(input('Key to encrypt: '))
+                if all(char.isalpha() or char.isspace() for char in key) is False:
+                    raise ValueError
                 break
             except ValueError:
-                print('Only alphabetic characters accepted for encryption! ')
+                print('Only alphabetic characters accepted for encryption and key setting!!! ')
 
         # Exit program if user enters "out"
         if mode == 'out':
