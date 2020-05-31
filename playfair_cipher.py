@@ -25,7 +25,7 @@
 # the encrypted pair is the one that lies on the same row as the first letter of the plaintext pair.
 # 5) To decrypt, use the inverse (opposite) of the last 3 rules, and the first as-is (dropping any extra "X"s).
 #
-# More information about the cipher: https://en.wikipedia.org/wiki/Playfair_cipher
+# Book used as base for program's algorithm (pt/br) : http://wiki.stoa.usp.br/images/c/cf/Stallings-cap2e3.pdf
 # **********************************************************************************************************************
 
 
@@ -69,12 +69,12 @@ def pf_tablemaker(key_zero):
     return pf_table
 
 
-def playfair_cipher(text_zero, key_zero, mode='e'):
+def playfair_cipher(clear_text, key_zero, mode='e'):
     """
-    This function takes a string text_zero to be encrypted, a string key_zero to create a table or encryption and a mode
-    to set the mode on encryption or decryption and outputs a original text encrypted
-    """
-    text = text_zero.upper().replace(' ', '')
+      This function takes a key text to be encrypted, an integer key_zero to encrypt and a string mode
+      to set the mode to encryption or decryption and outputs the original text encrypted
+      """
+    text = clear_text.upper().replace(' ', '')
 
     # Rearrange Text and Cipher Table to Playfair's format
     text = [letter if letter != 'J' else 'I' for letter in text]
@@ -102,7 +102,7 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
     else:
         md = 1
 
-    crypt_text = []
+    crypt_lst = []
     for pair in text:
         # Same Row Case
         if getindex(cipher_table, pair[0])[0] == getindex(cipher_table, pair[1])[0]:
@@ -110,23 +110,23 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
             x1, y1 = getindex(cipher_table, pair[0])
             # encrypt mode
             if y1 == (len(cipher_table) - 1) and mode == 'e':
-                crypt_text.append(cipher_table[x1][0])
+                crypt_lst.append(cipher_table[x1][0])
 
             # Decryption mode
             elif y1 == 0 and mode == 'd':
-                crypt_text.append(cipher_table[x1][-1])
+                crypt_lst.append(cipher_table[x1][-1])
             else:
-                crypt_text.append(cipher_table[x1][y1 + 1 * md])
+                crypt_lst.append(cipher_table[x1][y1 + 1 * md])
 
             # For second letter of pair
             x2, y2 = getindex(cipher_table, pair[1])
             if y2 == (len(cipher_table) - 1) and mode == 'e':
-                crypt_text.append(cipher_table[x2][0])
+                crypt_lst.append(cipher_table[x2][0])
 
             elif y2 == 0 and mode == 'd':
-                crypt_text.append(cipher_table[x2][-1])
+                crypt_lst.append(cipher_table[x2][-1])
             else:
-                crypt_text.append(cipher_table[x2][y2 + 1 * md])
+                crypt_lst.append(cipher_table[x2][y2 + 1 * md])
 
         # Same Column Case
         elif getindex(cipher_table, pair[0])[1] == getindex(cipher_table, pair[1])[1]:
@@ -134,40 +134,40 @@ def playfair_cipher(text_zero, key_zero, mode='e'):
             x1, y1 = getindex(cipher_table, pair[0])
 
             if x1 == (len(cipher_table) - 1) and mode == 'e':
-                crypt_text.append(cipher_table[0][y1])
+                crypt_lst.append(cipher_table[0][y1])
 
             elif x1 == 0 and mode == 'd':
-                crypt_text.append(cipher_table[-1][y1])
+                crypt_lst.append(cipher_table[-1][y1])
             else:
-                crypt_text.append(cipher_table[x1 + 1 * md][y1])
+                crypt_lst.append(cipher_table[x1 + 1 * md][y1])
 
             # For second letter of pair
             x2, y2 = getindex(cipher_table, pair[1])
             if x2 == (len(cipher_table) - 1) and mode == 'e':
-                crypt_text.append(cipher_table[0][y2])
+                crypt_lst.append(cipher_table[0][y2])
             elif x2 == 0 and mode == 'd':
-                crypt_text.append(cipher_table[-1][y2])
+                crypt_lst.append(cipher_table[-1][y2])
             else:
-                crypt_text.append(cipher_table[x2 + 1 * md][y2])
+                crypt_lst.append(cipher_table[x2 + 1 * md][y2])
 
         # Different Row and column Case
         else:
             x1, y1 = getindex(cipher_table, pair[0])
             x2, y2 = getindex(cipher_table, pair[1])
             # For first letter of pair
-            crypt_text.append(cipher_table[x1][y2])
+            crypt_lst.append(cipher_table[x1][y2])
 
             # For second letter of pair
-            crypt_text.append(cipher_table[x2][y1])
+            crypt_lst.append(cipher_table[x2][y1])
 
-    # Transform crypt_text into a string for output
-    new_text = ''
-    for i in range(len(crypt_text)):
-        new_text += crypt_text[i]
+    # Transform crypt_lst into a string for output
+    cipher_text = ''
+    for i in range(len(crypt_lst)):
+        cipher_text += crypt_lst[i]
         if i % 2 != 0:
-            new_text += ' '
+            cipher_text += ' '
 
-    return new_text
+    return cipher_text
 
 
 def main():
