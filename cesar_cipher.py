@@ -8,15 +8,17 @@
 # in which each letter in the plaintext is replaced by a letter some fixed number of positions down the alphabet.
 # For example, with a left shift of 3, D would be replaced by A, E would become B, and so on. The method is named after
 # Julius Caesar, who used it in his private correspondence.
-# **************************************************************************************************************
+#
+# Text used as base for program's algorithm at (pt/br): http://wiki.stoa.usp.br/images/c/cf/Stallings-cap2e3.pdf
+# **********************************************************************************************************************
 
 from collections import deque
 
 
-def cesar_cipher(text, key, mode='e'):
+def cesar_cipher(clear_text, key, mode='e'):
     """
-    This function takes a key text to be encrypted, an integer key_zero to create to encrypt and a mode
-    to set the mode on encryption or decryption and outputs the original text encrypted
+    This function takes a key text to be encrypted, an integer key to encrypt and a string mode
+    to set the mode to encryption or decryption and outputs the original text encrypted
     """
     if mode == 'e':
         cod = -1
@@ -25,28 +27,28 @@ def cesar_cipher(text, key, mode='e'):
     else:
         raise ValueError
 
-    text.lower()
+    clear_text.lower()
     alpha = 'abcdefghijklmnopqrstuvwxyz'
     alpha_deq = deque(alpha)
     alpha_deq.rotate(key * cod)
 
-    res = ''
-    crypt_text = []
-    for letter in text:
+    cypher_lst = []
+    for letter in clear_text:
         if letter in alpha:
-            crypt_text.append(str.index(alpha, letter))
+            cypher_lst.append(str.index(alpha, letter))
         elif letter == ' ':
-            crypt_text.append(' ')
+            cypher_lst.append(' ')
         else:
-            crypt_text.append('#')
+            cypher_lst.append('#')
 
-    for i in crypt_text:
+    cipher_text = ''
+    for i in cypher_lst:
         if i == ' ' or i == '#':
-            res += i
+            cipher_text += i
         else:
-            res += alpha_deq[i]
+            cipher_text += alpha_deq[i]
 
-    return res
+    return cipher_text
 
 
 def main():
@@ -55,6 +57,7 @@ def main():
     """
     while True:
         print('CESAR CIPHER PROGRAM\n')
+
         while True:
             try:
                 mode_tb = ['0', 'e', 'd']
