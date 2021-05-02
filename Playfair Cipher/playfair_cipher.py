@@ -178,8 +178,8 @@ def main():
         while True:
             try:
                 options = ('e', 'd', 't', 'out')
-                print('\nWhich mode would like to use?')
-                mode = str(input('Encrypt -> e | Decrypt -> d | t -> show table for key | out -> exit program >> '))
+                print('\nWhich mode would you like to use?')
+                mode = str(input('Encrypt -> e | Decrypt -> d | t -> show table for given key | out -> exit program >> '))
                 if mode not in options:
                     raise ValueError
                 break
