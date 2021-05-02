@@ -1,7 +1,7 @@
 # Program Playfair Cipher - Python
 # Author: Lucas Xavier Marins
 # GitHub Profile: https://github.com/lucasxmarins
-# Data: 28/05/2020
+# Date: 28/05/2020
 #
 # Description: The Playfair cipher uses a 5 by 5 table containing a key word or phrase.
 # To encrypt a message, one would break the message into digrams (groups of 2 letters) such that, for example:
