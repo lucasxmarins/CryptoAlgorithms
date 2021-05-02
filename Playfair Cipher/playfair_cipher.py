@@ -28,6 +28,7 @@
 # Book used as base for program's algorithm (pt/br) : http://wiki.stoa.usp.br/images/c/cf/Stallings-cap2e3.pdf
 # **********************************************************************************************************************
 
+from unidecode import unidecode
 
 def getindex(array, item):
     """ This function takes an 2D array and an item of arguments and returns the index of item in array. """
@@ -74,7 +75,8 @@ def playfair_cipher(clear_text, key_zero, mode='e'):
       This function takes a key text to be encrypted, an integer key_zero to encrypt and a string mode
       to set the mode to encryption or decryption and outputs the original text encrypted
       """
-    text = clear_text.upper().replace(' ', '')
+
+    text = unidecode(clear_text).upper().replace(' ', '')
 
     # Rearrange Text and Cipher Table to Playfair's format
     text = [letter if letter != 'J' else 'I' for letter in text]
@@ -82,11 +84,6 @@ def playfair_cipher(clear_text, key_zero, mode='e'):
     for i, j in enumerate(text):
         if text[i] == text[i - 1] and i % 2 != 0:
             text.insert(i, 'X')
-    # Try uncomment section bellow. You'll see range function only provides us a static length. With append()
-    # the size of our list is increasing, so range cannot helps us :(
-    # for i in range(len(text)):
-    #     if text[i] == text[i - 1] and i % 2 != 0:
-    #         text.insert(i, 'X')
 
     if len(text) % 2 != 0:
         text.append('X')
