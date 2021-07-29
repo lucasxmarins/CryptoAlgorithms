@@ -30,9 +30,9 @@
 
 from unidecode import unidecode
 
+ """ This function takes an 2D array and an item of arguments and returns the index of item in array. """
 def getindex(array, item):
-    """ This function takes an 2D array and an item of arguments and returns the index of item in array. """
-
+ 
     item_row, item_column = '', ''
 
     for i, row in enumerate(array):
@@ -45,19 +45,21 @@ def getindex(array, item):
     return item_row, item_column
 
 
-def split(array, n):
-    """
+"""
     This function takes an array of 1 dimension and a integer (n) as arguments
     and returns the array rearranged as an array of size (n x n)
-    """
+"""
+def split(array, n):
+    
     k, m = divmod(len(array), n)
     return list(array[i * k + min(i, m):(i + 1) * k + min(i + 1, m)] for i in range(int(n)))
 
 
-def pf_tablemaker(key_zero):
-    """
+ """
     This function takes a string key as argument and returns table to be used for encryption
-    """
+ """
+def pf_tablemaker(key_zero):
+   
     key = key_zero.upper().replace(' ', '')
     # Playfair cipher uses a version of alphabet in which i and j are counted as the same letter
     pf_alphabet = list('ABCDEFGHIKLMNOPQRSTUVWXYZ')
@@ -69,12 +71,12 @@ def pf_tablemaker(key_zero):
 
     return pf_table
 
-
-def playfair_cipher(clear_text, key_zero, mode='e'):
-    """
+  """
       This function takes a key text to be encrypted, an integer key_zero to encrypt and a string mode
       to set the mode to encryption or decryption and outputs the original text encrypted
-      """
+  """
+def playfair_cipher(clear_text, key_zero, mode='e'):
+    
 
     text = unidecode(clear_text).upper().replace(' ', '')
 
@@ -101,8 +103,10 @@ def playfair_cipher(clear_text, key_zero, mode='e'):
 
     crypt_lst = []
     for pair in text:
+        
         # Same Row Case
         if getindex(cipher_table, pair[0])[0] == getindex(cipher_table, pair[1])[0]:
+            
             # For first letter of pair
             x1, y1 = getindex(cipher_table, pair[0])
             # encrypt mode
@@ -167,10 +171,11 @@ def playfair_cipher(clear_text, key_zero, mode='e'):
     return cipher_text
 
 
-def main():
-    """
+"""
     Main function that receives user input and passes it to playfair_cipher( )
-    """
+"""
+def main():
+
 
     print('PLAYFAIR CIPHER PROGRAM')
     while True:
@@ -224,5 +229,6 @@ def main():
             print()
 
 
+            
 if __name__ == '__main__':
     main()
